@@ -4,5 +4,7 @@ module.exports = {
     "#bar"
   ],
   botTracker: "",
-  mainChannel: ""
+  mainChannel: "",
+  SPAM_THRESHOLD: 4,
+  SPAM_FREQUENCY: 20
 };
