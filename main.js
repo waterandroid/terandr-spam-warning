@@ -1,3 +1,4 @@
+var IRC = require("internet-relay-chat");
 var bot = require("../../terandr");
 var fs = require("fs");
 var settings = require("./settings");
@@ -17,12 +18,13 @@ module.exports = {
         return false;
       }
       var textSplit = text.indexOf(":");
-			if (textSplit == -1) {
+			if ((textSplit == -1) || (text.indexOf("has joined the game") !== -1) || (text.indexOf("has left the game") !== -1) || (text.indexOf("!add") !== -1) || (text.indexOf("!remove") !== -1)) {
 				return false;
 			}
       var player = text.substr(0, textSplit);
       var message = text.substr(textSplit + 2);
       var numMessages = playerMessagesList.length;
+			player = fixPlayerName(player);
       for (i = 0; i < numMessages; i++) {
         if ((playerMessagesList[i].player == player) && playerMessagesList[i].chat == message) {
           playerMessagesList[i].count++;
@@ -65,12 +67,15 @@ module.exports = {
 
 function viewSpamList(parameters, sender) {
   for (i = 0; i < playerMessagesList.length; i++) {
-    if (playerMessagesList[i].count >= SPAM_THRESHOLD || parameters == "all") {
-      //bot.bot.message(sender, player + " has said \"" + message + "\" on " + channel + ". Count: " + playerMessagesList[i].count);
+    if (playerMessagesList[i].count >= SPAM_THRESHOLD - 2) {
       console.log(playerMessagesList[i].player + " has said \"" + playerMessagesList[i].chat + "\" on " + playerMessagesList[i].channel + ". Count: " + playerMessagesList[i].count);
       bot.bot.notice(sender, playerMessagesList[i].player + " has said \"" + playerMessagesList[i].chat + "\" on " + playerMessagesList[i].channel + ". Count: " + playerMessagesList[i].count);
       continue;
     }
+		if (parameters == "all") {
+			console.log(playerMessagesList[i].player + " has said \"" + playerMessagesList[i].chat + "\" on " + playerMessagesList[i].channel + ". Count: " + playerMessagesList[i].count);
+			continue;
+		}
   }
 }
 
@@ -93,4 +98,18 @@ function enterChannels() {
   for (i = 0; i < moderationChannels.length; i++) {
     bot.bot.join(moderationChannels[i]);
   }
+}
+
+function fixPlayerName(name) {
+	if (name.indexOf("*DEAD*") !== -1) {
+		name = name.substr(name.indexOf(" ") + 1);
+	}
+	if (name.indexOf("*SPEC*") !== -1) {
+		name = name.substr(name.indexOf(" ") + 1);
+	}
+	if (name.indexOf("(TEAM)") !== -1) {
+		name = name.substr(name.indexOf(" ") + 1);
+	}
+	name = name.substr(3, name.length - 4);
+	return name;
 }
