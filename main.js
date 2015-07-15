@@ -72,7 +72,7 @@ function viewSpamList(parameters, sender) {
       bot.bot.notice(sender, playerMessagesList[i].player + " has said \"" + playerMessagesList[i].chat + "\" on " + playerMessagesList[i].channel + ". Count: " + playerMessagesList[i].count);
       continue;
     }
-		if (parameters == "all") {
+		if (parameters == "all" && playerMessagesList[i].count >= 2) {
 			console.log(playerMessagesList[i].player + " has said \"" + playerMessagesList[i].chat + "\" on " + playerMessagesList[i].channel + ". Count: " + playerMessagesList[i].count);
 			continue;
 		}
