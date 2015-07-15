@@ -81,6 +81,7 @@ function viewSpamList(parameters, sender) {
 
 function reduceCount() {
   if (playerMessagesList.length === 0) {
+		setTimeout(reduceCount, SPAM_FREQUENCY * 1000);
     return false;
   }
   for (i = 0; i < playerMessagesList.length; i++) {
