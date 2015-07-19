@@ -77,6 +77,7 @@ function viewSpamList(parameters, sender) {
 			continue;
 		}
   }
+	console.log("-- END OF SPAM LIST --");
 }
 
 function reduceCount() {
