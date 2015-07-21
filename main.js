@@ -28,16 +28,17 @@ module.exports = {
       for (i = 0; i < numMessages; i++) {
         if ((playerMessagesList[i].player == player) && playerMessagesList[i].chat == message) {
           playerMessagesList[i].count++;
-          if (playerMessagesList[i].count >= SPAM_THRESHOLD) {
+          if (playerMessagesList[i].count >= SPAM_THRESHOLD && playerMessagesList[i].alerted === false) {
             //Alert: Player Spamming
 						//bot.bot.sendLine({"command": "PRIVMSG", "args": [mainChannel], tail: "AdminAlert: " + player + " is spamming \"" + message + "\" on " + channel + ". Count: " + playerMessagesList[i].count});
             bot.bot.message(mainChannel, "AdminAlert: " + player + " is spamming \"" + message + "\" on " + channel + ". Count: " + playerMessagesList[i].count);
+						playerMessagesList[i].alerted = true;
 						console.log("SPAM");
           }
           return true;
         }
       }
-      playerMessagesList.push({player:player, chat: message, channel: channel, count: 1});
+      playerMessagesList.push({player:player, chat:message, channel:channel, count:1, alerted:false});
       return true;
     },
     enterChannels: function() {
@@ -87,6 +88,7 @@ function reduceCount() {
   }
   for (i = 0; i < playerMessagesList.length; i++) {
     playerMessagesList[i].count--;
+		playerMessagesList[i].alerted = false;
     if (playerMessagesList[i].count <= 0) {
       playerMessagesList.splice(i, 1);
     }
