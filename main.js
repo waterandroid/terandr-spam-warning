@@ -57,13 +57,11 @@ module.exports = {
   onMessage: [
     "parseText"
   ],
-  commands: [
-    {
-      viewspam: function(parameters, sender) {
-        viewSpamList(parameters, sender);
-      }
+  commands: {
+    viewspam: function(parameters, sender) {
+      viewSpamList(parameters, sender);
     }
-  ]
+  }
 };
 
 function viewSpamList(parameters, sender) {
