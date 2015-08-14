@@ -1,9 +1,16 @@
 var IRC = require("internet-relay-chat");
 var bot = require("../../terandr");
 var fs = require("fs");
-var settings = require("./settings");
-if (fs.existsSync("settings_dev.js")) {
+var settings;
+try {
 	settings = require("./settings_dev");
+	//console.log("Using Developer Settings");
+} catch (e) {
+	try {
+		settings = require("./settings");
+	} catch (f) {
+		throw new Error("settings.js does not exist or cannot be read");
+	}
 }
 var moderationChannels = settings.moderationChannels;
 var mainChannel = settings.mainChannel;
@@ -50,7 +57,7 @@ module.exports = {
       reduceCount();
     },
   },
-  onStart: function() {
+  onRegister: function() {
     enterChannels();
     reduceCount();
   },
